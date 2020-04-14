@@ -71,7 +71,7 @@
               <small class="text-muted">{{ post.date_posted.strftime('%A,  %d %b %Y') }}</small>&nbsp;&nbsp;&nbsp;&nbsp;
               <small class="text-muted">{{ post.date_posted.strftime('%I:%M %p') }}</small>
             </div>
-            <b><a class="article-title1" href="{{ url_for('post', post_id=post.id) }}">Available Food :</a></b>
+            <b><a class="article-title1" href="{{ url_for('post', post_id=post.id) }}">Required Food :</a></b>
             <p class="article-content list-group"> 
                 <li style="border-color: #B5070E;border-width: .1rem " class="list-group-item list-group-item-light">{{ post.food }}</li>
             </p>
