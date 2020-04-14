@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="row"> 
+  <div class="col-md-6">
+    <article class="media content-section" style="  background: linear-gradient(to bottom, #28cd78 70%, black 140%); border-color: #ff0033; border-width: 5px; border-radius: 10px;">
+    <h3 style="color: white;align-content: center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VENDORS</h3>
+    </article>
+  </div>
+  <div class="col-md-6">
+    <article class="media content-section" style="background: linear-gradient(to bottom, #037ef3 70%, black 140%); border-color: #037ef3; border-width: 5px;border-radius: 10px;">
+    <h3 style="color:white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONSUMERS</h3>
+  </article>
+  </div>
+</div>
+
+
+<div class="row"> 
+  <div class="col-md-6">
+    {% for post in posts.items %}
+      {% if post.author.usertype=="Vendor" %}
+        {% if post.user_id==current_user.id %}
+        <article style="background: linear-gradient(to bottom, #001931 15%, white 100%); " class="media content-section">
+        {%else%}
+        <article  class="media content-section">
+        {%endif%}  
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <b><a><font size="5" color=#28cd78 class="mr-2" href="#">{{ post.author.username }}</b></font></a><br>
+              <b><a class="text-muted">{{ post.author.location }}</a></b> <br>
+              <small class="text-muted">{{ post.date_posted.strftime('%A,  %d %b %Y') }}</small>&nbsp;&nbsp;&nbsp;&nbsp;
+              <small class="text-muted">{{ post.date_posted.strftime('%I:%M %p') }}</small>
+            </div>
+            <b><a class="article-title1" href="{{ url_for('post', post_id=post.id) }}">Available Food :</a></b>
+            <p class="article-content list-group"> 
+                <li style="border-color:#28cd78; " class="list-group-item list-group-item-light">{{ post.food }}</li>
+            </p>
+            </div>
+            {% if current_user.usertype=="Consumer" %}
+            <a href="{{ url_for('confirmmatch',post_id=post.id, partner_id=current_user.id) }}"><button class="btn btn-outline-success" type="button" >Request Food </button></a>
+            {%else%}
+            <button type="button" class="btn btn-outline-success" disabled>Request Food </button>   
+            {%endif%}
+        </article> 
+      {%endif%}      
+    {%endfor%}
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-6">
+    {% for post in posts.items %}
+      {% if post.author.usertype=="Consumer" %}
+        {% if post.user_id==current_user.id %}
+        <article style="background: linear-gradient(to bottom, #001931 15%, white 100%);" class="media content-section">
+        {%else%}
+        <article  class="media content-section">
+        {%endif%}  
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <b><a><font size="5" color=#037ef3 class="mr-2" href="#">{{ post.author.username }}</b></font></a><br>
+              <b><a class="text-muted">{{ post.author.location }}</a></b> <br>
+              <small class="text-muted">{{ post.date_posted.strftime('%A,  %d %b %Y') }}</small>&nbsp;&nbsp;&nbsp;&nbsp;
+              <small class="text-muted">{{ post.date_posted.strftime('%I:%M %p') }}</small>
+            </div>
+            <b><a class="article-title2" href="{{ url_for('post', post_id=post.id) }}">Required Food :</a></b>
+            <p class="article-content list-group"> 
+                <li style="border-color:#037ef3 " class="list-group-item list-group-item-light">{{ post.food }}</li>
+            </p>
+          </div>
+            {% if current_user.usertype=="Vendor" %}
+            <a href="{{ url_for('confirmmatch',post_id=post.id,partner_id=current_user.id) }}"><button class="btn btn-outline-success" type="button" data-toggle="modal" data-target="#matchModal" >Donate Food </button></a>
+            {%else%}
+            <button type="button" class="btn btn-outline-primary" disabled>Donate Food </button>
+            {%endif%}
+        </article>
+      {% endif %}
+    {% endfor %}
+  </div>  
+</div>
+
+  <!-- modal 
+                <div class="modal fade" id="matchModal" tabindex="-1" role="dialog"    aria-labelledby="matchModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Are you sure you wish to request for matching ?</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <form action="{{ url_for('about') }}" >
+                        <input class="btn btn-outline-success" type="submit" value="Request Matching">
+                      </form>
+                    </div>
+                    </div>
+                  </div>
+                </div>  -->
+
+
+
+
+    {%for page_num in posts.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
+      {%if page_num%}
+        {%if posts.page==page_num%}
+          <a class="btn btn-info mb-4" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+        {%else%}
+          <a class="btn btn-outline-info mb-4" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+        {%endif%}
+      {%else%}
+      {%endif%}
+    {%endfor%}
+{% endblock content %}
